@@ -1,0 +1,23 @@
+Type: Project
+Title: Preparation of Surgical Samples for LCMS: A Comprehensive Analysis of Warm and Cold Ischemia on Renal Tumors
+Authors@R: c(
+    person("Joshua", "Preston", email = "joshua.preston@emory.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9834-3017")),
+    person("James Jiada", "Zhan", role = "aut", comment = c(ORCID = "0000-0003-2480-8760"))
+    )
+Description: LC-MS Exposomics analysis pipeline for RCC metabolomics methods study. This project contains all code and analysis scripts for reproducing the results submitted to ____, Preston and Zhan et al. 2026.
+URL: https://github.com/jdpreston30/RCC-metabolomics-methods
+Depends: 
+    R (>= 4.5.1)
+Imports:
+    cowplot,
+    dplyr,
+    ggplot2,
+    glue,
+    here,
+    limma,
+    purrr,
+    readxl,
+    readr,
+    tinytex,
+    yaml
+Encoding: UTF-8

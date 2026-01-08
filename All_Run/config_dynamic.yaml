@@ -1,0 +1,59 @@
+# Analysis Configuration - Dynamic Computer Detection
+# Project settings and data paths for reproducible analysis
+
+# Computer-specific path templates
+computers:
+  laptop:
+    user_home: "/Users/jdp2019"
+    onedrive_path: "Library/CloudStorage/OneDrive-Emory"
+    metabojanitor_subpath: "MetaboJanitoR"
+    figures_path: "Outputs/Figures/Final"
+  
+  desktop:
+    user_home: "/Users/JoshsMacbook2015" 
+    onedrive_path: "Library/CloudStorage/OneDrive-EmoryUniversity"
+    metabojanitor_subpath: "MetaboJanitoR"
+    figures_path: "Outputs/Figures/Final"
+
+# Dynamic path templates (will be populated based on computer selection)
+paths:
+  # Raw data path templates - {user_home} and {onedrive_path} will be substituted
+  ratio_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_ratio_Preston"
+  main_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_Preston_240114"
+  
+  # Output paths (relative to project root)
+  output: "./Outputs"
+  figures: "{figures_path}"
+  
+  # Script and utility paths
+  scripts: "R/Scripts/"
+  utils: "R/Utilities/"
+
+# File path templates (parameterized by {data_path} placeholder)
+file_templates:
+  MSMICA_20p: "{data_path}/{metabojanitor_subpath}/3b/MSMICA/global_KEGG/MSMICA_Feature_Tables/MSMICA_20p_halfmin_log2.csv"
+  MSMICA_key: "{data_path}/{metabojanitor_subpath}/3b/MSMICA/global_KEGG/MSMICA_Feature_Tables/MSMICA_feature_key.csv"
+  UFT_full: "{data_path}/{metabojanitor_subpath}/3b/Untargeted/UFT_full_halfmin_log2.csv"
+  UFT_20p: "{data_path}/{metabojanitor_subpath}/3b/Untargeted/UFT_20p_halfmin_log2.csv"
+
+# Data version configurations (ratio vs main)
+data_versions:
+  ratio:
+    data_path: ratio_data_path
+  main:
+    data_path: main_data_path
+
+# Analysis settings (same across all computers)
+analysis:
+
+  # Environment preferences
+  tibble_options:
+    print_max: 100
+    print_min: 100
+    sigfig: 7
+    
+  # Data.table preferences  
+  datatable_options:
+    print_class: true
+    print_keys: true
+    aware: true
