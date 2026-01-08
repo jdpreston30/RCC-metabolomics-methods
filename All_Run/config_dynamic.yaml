@@ -34,7 +34,9 @@ file_templates:
   MSMICA_20p: "{data_path}/{metabojanitor_subpath}/3b/MSMICA/global_KEGG/MSMICA_Feature_Tables/MSMICA_20p_halfmin_log2.csv"
   MSMICA_key: "{data_path}/{metabojanitor_subpath}/3b/MSMICA/global_KEGG/MSMICA_Feature_Tables/MSMICA_feature_key.csv"
   UFT_full: "{data_path}/{metabojanitor_subpath}/3b/Untargeted/UFT_full_halfmin_log2.csv"
+  UFT_full_0s: "{data_path}/{metabojanitor_subpath}/3b/Untargeted/UFT_full.csv"
   UFT_20p: "{data_path}/{metabojanitor_subpath}/3b/Untargeted/UFT_20p_halfmin_log2.csv"
+  labels_weights: "{data_path}/labels_weights.xlsx"
 
 # Data version configurations (ratio vs main)
 data_versions:

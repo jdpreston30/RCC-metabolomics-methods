@@ -11,13 +11,17 @@ Depends:
 Imports:
     cowplot,
     dplyr,
-    ggplot2,
     glue,
     here,
+    emmeans,
     limma,
     purrr,
     readxl,
+    magick,
     readr,
     tinytex,
-    yaml
+    stringr,
+    yaml,
+    tidyr,
+    ggplot2
 Encoding: UTF-8
