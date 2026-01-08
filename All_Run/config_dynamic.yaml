@@ -20,6 +20,7 @@ paths:
   # Raw data path templates - {user_home} and {onedrive_path} will be substituted
   ratio_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_ratio_Preston"
   main_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_Preston_240114"
+  HFQE_lib: "Databases/HFQE_lib.csv"
   
   # Output paths (relative to project root)
   output: "./Outputs"
