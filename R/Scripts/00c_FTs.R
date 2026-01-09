@@ -72,7 +72,9 @@ TFT_confirmed <- identified$TFT_confirmed |>
 #- 0c.4.4: Build key
 TFT_confirmed_key <- identified$matched_features %>%
   select(identified_name = compound_name, isomer = library_isomer, everything()) %>%
-  mutate(MMD = "")
+  group_by(identified_name) %>%
+  mutate(MMD = ifelse(n_distinct(feature_mode) > 1, "Y", "")) %>%
+  ungroup()
 #+ 0c.5: Create merged library/annotated TFT
 #- 0c.5.1: Subset features from annotations with source tracking
 TFT_annot_features <- main_msmica_key %>%
@@ -113,3 +115,29 @@ TFT_confirmed_features_only <- TFT_confirmed %>%
 TFT_combined_main <- TFT_combined_base %>%
   left_join(TFT_confirmed_features_only, by = "Sample_ID") %>%
   filter_unique_features(unique_threshold = 0.8)
+#+ 0c.6: Create key for merged TFT
+#- 0c.6.1: Extract feature column names into tibble
+TFT_combined_features <- tibble(
+  feature = colnames(TFT_combined_main)[str_detect(colnames(TFT_combined_main), "^(HILIC|C18)_")]
+) |>
+  pull(feature)
+#- 0c.6.2: Subset features from annotations with source tracking
+annot_key <- main_msmica_key %>%
+  mutate(source = "annotation") |>
+  select(feature, source, identified_name, isomer, Mode, Adduct, MMD, KEGGID = KEGG, HMDBID = HMDB)
+#- 0c.6.3: Subset features from confirmed with source tracking
+confirmed_key <- TFT_confirmed_key %>%
+  mutate(source = "library") |>
+  select(feature, source,identified_name, isomer, Mode = feature_mode, Adduct = adduct, MMD, KEGGID = kegg_id, HMDBID = hmdb_id)
+#- 0c.6.4: Bind keys; filter to only those in merged TFT
+combined_key <- bind_rows(confirmed_key, annot_key) %>%
+  filter(feature %in% TFT_combined_features)
+#- 0c.6.5: Read in matches of critical cancer metabolites and combined key
+cancer_metabolites <- read_excel(config$paths$cancer_metabolites, sheet = "matches") |>
+  filter(critical == "Y") |>
+  select(identified_name = display_name, feature) |>
+  unique()
+#- 0c.6.6: Create feature table with just the critical cancer metabolites
+TFT_combined_cancer_metabolites <- TFT_combined_main %>%
+  filter(tissue_type == "Tumor") %>%
+  select(Sample_ID, pt_tissue_ID, tx, time, all_of(cancer_metabolites$feature))

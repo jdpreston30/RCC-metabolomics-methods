@@ -131,6 +131,7 @@ create_identified_FT <- function(feature_table,
           library_rt = library_entry$time_lib,
           adduct = library_entry$Adduct,
           kegg_id = library_entry$KEGGID,
+          hmdb_id = library_entry$HMDBID,
           library_isomer = library_entry$Library_Isomer,
           
           # Match quality metrics

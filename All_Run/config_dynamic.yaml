@@ -21,7 +21,7 @@ paths:
   ratio_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_ratio_Preston"
   main_data_path: "{user_home}/{onedrive_path}/Research/MS_raw_data/LCMS/RCC/RCC_Preston_240114"
   HFQE_lib: "Databases/HFQE_lib.csv"
-  
+  cancer_metabolites: "Databases/cancer_metabolites.xlsx"
   # Output paths (relative to project root)
   output: "./Outputs"
   figures: "{figures_path}"

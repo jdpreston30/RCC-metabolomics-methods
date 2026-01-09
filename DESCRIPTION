@@ -23,5 +23,6 @@ Imports:
     stringr,
     yaml,
     tidyr,
-    ggplot2
+    ggplot2,
+    lmerTest
 Encoding: UTF-8
