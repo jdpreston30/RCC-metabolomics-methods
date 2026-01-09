@@ -18,19 +18,31 @@ main_uft_20p_tumors <- main_uft_20p %>%
   # Get feature columns
   feature_cols <- colnames(main_uft_20p_tumors)[str_detect(colnames(main_uft_20p_tumors), "^(HILIC|C18)_")]
   
-  # Calculate deviations from GS for each patient
-  global_with_deviations <- global_ice_rt
+  # Calculate deviations from GS for each patient - VECTORIZED APPROACH
+  # Convert to matrices for fast computation
+  gs_matrix <- GS_baseline_global %>%
+    select(all_of(feature_cols)) %>%
+    as.matrix()
   
-  for (feat in feature_cols) {
-    # For each sample, subtract the GS value for that patient
-    global_with_deviations <- global_with_deviations %>%
-      left_join(
-        GS_baseline_global %>% select(pt_tissue_ID, gs_value = !!feat),
-        by = "pt_tissue_ID"
-      ) %>%
-      mutate(!!paste0(feat, "_delta") := !!sym(feat) - gs_value) %>%
-      select(-gs_value)
-  }
+  sample_matrix <- global_ice_rt %>%
+    select(all_of(feature_cols)) %>%
+    as.matrix()
+  
+  # Match patient IDs to get correct GS baseline for each sample
+  patient_match <- match(global_ice_rt$pt_tissue_ID, GS_baseline_global$pt_tissue_ID)
+  
+  # Subtract GS from samples (vectorized across all features at once)
+  delta_matrix <- sample_matrix - gs_matrix[patient_match, ]
+  
+  # Convert back to tibble and add delta column names
+  delta_df <- as_tibble(delta_matrix)
+  colnames(delta_df) <- paste0(feature_cols, "_delta")
+  
+  # Combine with metadata
+  global_with_deviations <- bind_cols(
+    global_ice_rt %>% select(Sample_ID, pt_tissue_ID, tx, time),
+    delta_df
+  )
   
   # Convert to long format for analysis
   delta_cols <- paste0(feature_cols, "_delta")
@@ -101,13 +113,11 @@ main_uft_20p_tumors <- main_uft_20p %>%
   tx_colors <- c("Ice" = "#0958b3ff", "RT" = "#5d0f10")
   
   plot_global_trajectory <- ggplot(global_summary_with_baseline, 
-                                   aes(x = time_numeric, y = mean, color = tx, fill = tx, group = tx)) +
-    geom_ribbon(aes(ymin = mean - se, ymax = mean + se), alpha = 0.2, color = NA) +
+                                   aes(x = time_numeric, y = mean, color = tx, group = tx)) +
     geom_smooth(method = "loess", se = FALSE, linewidth = 0.8, span = 0.75) +
     geom_point(size = 3, shape = 19) +
     geom_hline(yintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.4) +
     scale_color_manual(values = tx_colors, labels = c("Ice", "RT")) +
-    scale_fill_manual(values = tx_colors, labels = c("Ice", "RT")) +
     scale_x_continuous(
       breaks = c(0, 15, 30, 60, 90),
       labels = c("0", "15", "30", "60", "90")
